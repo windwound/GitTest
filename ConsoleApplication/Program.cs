@@ -10,7 +10,7 @@ namespace ConsoleApplication
     {
         static void Main(string[] args)
         {
-            ///tor
+            ///hello github
             Console.WriteLine("helo github");
         }
     };
