@@ -10,7 +10,6 @@ namespace ConsoleApplication
     {
         static void Main(string[] args)
         {
-            ///hello
             Console.WriteLine("helo github");
         }
     };
