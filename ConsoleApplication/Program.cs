@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,13 +9,13 @@ using System.Xml.Serialization;
 using System.IO;
 namespace ConsoleApplication
 {
-      [Serializable]
-        public class tt
-        {
+    [Serializable]
+    public class tt
+    {
             
-            public sbtt name;
-            public int age;
-        }
+        public sbtt name;
+        public int age;
+    }
     [Serializable]
       public class sbtt
       {
@@ -22,11 +23,45 @@ namespace ConsoleApplication
           public string firstname;
           public string lastfirstname;
       }
+    public enum Switch
+    {
+        ReUseBit=1,
+        CancelBit=2
+    }
     class Program
     {
+        public static int cmp(string s1, string s2)
+        {
+            if (s1[1] <= s2[1])
+                return 1;
+            else
+                return -1;
+        }
+        public delegate void testdel();
+        public static void nice1()
+        {
+            Console.WriteLine("nice1");
+        }
+        public static void nice2()
+        {
+            Console.WriteLine("nice2");
+        }
         static void Main(string[] args)
         {
-            ///hello github
+            testdel ss = new testdel(nice1);
+            ss += nice2;
+            MyButton bt = new MyButton();
+            bt.onclick += onbtnclick;
+            bt.click();
+            Console.ReadLine();
+        }
+        public static void onbtnclick(object sender, Eavr e)
+        {
+            Console.WriteLine(e.clicker + ",i wanna fuck you");
+        }
+        public static void  regtest()
+        {
+                        ///hello github
             tt xx = new tt()
             {
                 name = new sbtt{
@@ -64,7 +99,14 @@ namespace ConsoleApplication
             Console.WriteLine("************************");
             string mc2 = reg3.Replace(test, "><");
             Console.WriteLine(mc2);
-            Console.ReadLine();
+        }
+        public static void enumtest()
+        {
+            Switch x = (Switch)2;
+            if (x.HasFlag(Switch.CancelBit) && x.HasFlag(Switch.ReUseBit))
+            {
+                Console.WriteLine("dd");
+            }
         }
     };
 }
