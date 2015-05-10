@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 using System.IO;
+using System.Data.SqlClient;
+using System.Data;
+using System.Threading;
 namespace ConsoleApplication
 {
     [Serializable]
@@ -48,12 +51,65 @@ namespace ConsoleApplication
         }
         static void Main(string[] args)
         {
-            testdel ss = new testdel(nice1);
-            ss += nice2;
-            MyButton bt = new MyButton();
-            bt.onclick += onbtnclick;
-            bt.click();
+            Action A = new Action(act1);
+            Thread.CurrentThread.Name = "mainthread";
+            IAsyncResult res = A.BeginInvoke(delegate (IAsyncResult re)
+            {
+                Action aa = re.AsyncState as Action;
+                Console.WriteLine(Thread.CurrentThread.Name);
+                aa.EndInvoke(re);
+                Console.WriteLine("EndInvoke");
+            }, 
+            A);
+            Thread.Sleep(2);
+            Console.WriteLine("waitcompleled");
             Console.ReadLine();
+        }
+
+        public static int act()
+        {
+            Console.WriteLine("act1");
+            return 1;
+        }
+        public static void act1()
+        {
+            Console.WriteLine("act1");
+            Thread.Sleep(2000);
+        }
+        private static void sqltest()
+        {
+            o_orders ds = new o_orders();
+            string source = "Server=(localdb)\\v11.0;Integrated Security=SSPI;Database=fltorderdb";
+            try
+            {
+
+                StringBuilder sb = new StringBuilder();
+                SqlConnection conn = new SqlConnection(source);
+                conn.Open();
+                SqlCommand sqlcmd = new SqlCommand("select * from o_orders", conn);
+                // SqlParameter spa = new SqlParameter("@orderid", System.Data.SqlDbType.BigInt);
+                //spa.Value = 12000000001;
+                // sqlcmd.Parameters.Add(spa);
+                sqlcmd.CommandTimeout = 1;
+                // SqlDataReader reader = sqlcmd.ExecuteReader();
+                SqlDataAdapter ad = new SqlDataAdapter(sqlcmd);
+                ad.Fill(ds, "order");
+
+                if (ds.Tables.Count > 0)
+                {
+                    o_orders.orderDataTable order = ds.order;
+                    foreach (o_orders.orderRow row in order.Rows)
+                    {
+                        Console.WriteLine(row.orderid);
+                    }
+                }
+                conn.Close();
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
         }
         public static void onbtnclick(object sender, Eavr e)
         {
