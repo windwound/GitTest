@@ -9,7 +9,7 @@ namespace ConsoleApplication
     {
         public string clicker;
     }
-    class MyButton
+    public class MyButton
     {
         public event EventHandler<Eavr> onclick;
         public void click()
